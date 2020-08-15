@@ -43,7 +43,7 @@ public class Keyboard {
         keyboardOperations = new KeyboardOperations();
         disable();
         trigonometry = new RadioButton("Trigonometry");
-        trigonometry.setStyle("-fx-text-fill: white;");
+        trigonometry.getStylesheets().add(getClass().getResource("button/radioButton.css").toExternalForm());
         setAssesTrigonometry();
         setStyle();
         check = true;
