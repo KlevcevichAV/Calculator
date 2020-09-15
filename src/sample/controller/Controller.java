@@ -434,6 +434,35 @@ public class Controller {
         setEventEqual(view.getKeyboard().getKeyboardOperations().getEqualSign());
     }
 
+    private String endExpression(String expression){
+        if(checkSign(expression.charAt(expression.length() - 1))){
+            expression = copy(0, expression.length() - 1, expression);
+        }
+        int pointer = checkClosingBracket(expression);
+        for (int i = 0; i < pointer; i++) {
+            expression = expression + ')';
+        }
+        return expression;
+    }
+
+    private void setTempResult(){
+        String expression = view.getDisplayExpression().getText();
+        if (expression.length() == 0){
+            view.getDisplayResult().setText("");
+            return;
+        }
+        Double resultD = parser.start(endExpression(expression));
+        if (resultD == null) {
+            view.getDisplayResult().setText("Undefined");
+            return;
+        }
+        String result = "" + resultD;
+        if (result.charAt(result.length() - 1) == '0' && result.charAt(result.length() - 2) == '.') {
+            result = copy(0, result.length() - 2, result);
+        }
+        view.getDisplayResult().setText(result);
+    }
+
     private void setEvent() {
         setEventDigitalKeyboard();
         setEventOperationKeyboard();
