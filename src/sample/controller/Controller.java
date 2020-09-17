@@ -455,6 +455,9 @@ public class Controller {
             expression = copy(0, expression.length() - 1, expression);
         }
         int pointer = checkClosingBracket(expression);
+        if(pointer == expression.length()){
+            return "";
+        }
         for (int i = 0; i < pointer; i++) {
             expression = expression + ')';
         }
@@ -464,6 +467,11 @@ public class Controller {
     private void setTempResult(){
         String expression = view.getDisplayExpression().getText();
         if (expression.length() == 0){
+            view.getDisplayResult().setText("");
+            return;
+        }
+        String endExpression = endExpression(expression);
+        if(endExpression == "") {
             view.getDisplayResult().setText("");
             return;
         }
@@ -563,43 +571,58 @@ public class Controller {
     private void actions() {
         if ((pressedKeys.contains(KeyCode.SHIFT) && pressedKeys.contains(KeyCode.getKeyCode("8"))) || pressedKeys.contains(KeyCode.MULTIPLY)) {
             sign("*");
+            setTempResult();
             return;
         }
         if (pressedKeys.contains(KeyCode.SHIFT) && pressedKeys.contains(KeyCode.getKeyCode("5"))) {
             sign("%");
+            setTempResult();
             return;
         }
         if (pressedKeys.contains(KeyCode.SHIFT) && pressedKeys.contains(KeyCode.getKeyCode("9"))) {
             openingBracket();
+            setTempResult();
             return;
         }
         if (pressedKeys.contains(KeyCode.SHIFT) && pressedKeys.contains(KeyCode.getKeyCode("0"))) {
             closingBracket();
+            setTempResult();
             return;
         }
         if ((pressedKeys.contains(KeyCode.SHIFT) && pressedKeys.contains(KeyCode.EQUALS)) || pressedKeys.contains(KeyCode.PLUS)) {
             sign("+");
+            setTempResult();
             return;
         }
         if (pressedKeys.contains(KeyCode.SLASH) || pressedKeys.contains(KeyCode.DIVIDE)) {
             sign("/");
+            setTempResult();
             return;
         }
         if (pressedKeys.contains(KeyCode.EQUALS) || pressedKeys.contains(KeyCode.ENTER)) {
             equal();
+            setTempResult();
             return;
         }
         if (pressedKeys.contains(KeyCode.MINUS)) {
             signMinus("-");
+            setTempResult();
             return;
         }
         for (int i = 0; i < 10; i++) {
             if (pressedKeys.contains(KeyCode.getKeyCode(Integer.toString(i)))) {
                 eventDigitalKey(Integer.toString(i));
+                setTempResult();
             }
         }
-        if (pressedKeys.contains(KeyCode.DELETE)) clear();
-        if (pressedKeys.contains(KeyCode.BACK_SPACE)) deleteOneCharacter();
+        if (pressedKeys.contains(KeyCode.DELETE)) {
+            clear();
+            setTempResult();
+        }
+        if (pressedKeys.contains(KeyCode.BACK_SPACE)) {
+            deleteOneCharacter();
+            setTempResult();
+        }
     }
 
     private void setKeyAction() {
