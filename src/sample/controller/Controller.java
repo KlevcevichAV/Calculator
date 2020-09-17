@@ -299,6 +299,7 @@ public class Controller {
     private void setEventButton(Button button) {
         button.setOnAction(e -> {
             eventDigitalKey(button.getText());
+            setTempResult();
         });
     }
 
@@ -307,22 +308,27 @@ public class Controller {
             String expression = view.getDisplayExpression().getText();
             if (expression.length() == 0) {
                 view.getDisplayExpression().setText(0 + button.getText());
+                setTempResult();
                 return;
             }
             char symbol = expression.charAt(expression.length() - 1);
             if (checkSign(symbol)) {
                 view.getDisplayExpression().setText(expression + 0 + button.getText());
+                setTempResult();
                 return;
             }
             if (checkAnotherPoint(expression)) {
+                setTempResult();
                 return;
             }
             if (symbol >= '0' && symbol <= '9') {
                 view.getDisplayExpression().setText(expression + button.getText());
+                setTempResult();
                 return;
             }
             if (symbol == '(') {
                 view.getDisplayExpression().setText(expression + 0 + button.getText());
+                setTempResult();
             }
             return;
         });
@@ -337,48 +343,56 @@ public class Controller {
     private void setEventClear(Button button) {
         button.setOnAction(e -> {
             clear();
+            setTempResult();
         });
     }
 
     private void setEventSignMinus(Button button) {
         button.setOnAction(e -> {
             signMinus(button.getText());
+            setTempResult();
         });
     }
 
     private void setEventSign(Button button) {
         button.setOnAction(e -> {
             sign(button.getText());
+            setTempResult();
         });
     }
 
     private void setEventRoot(Button button) {
         button.setOnAction(e -> {
             root();
+            setTempResult();
         });
     }
 
     private void setEventDeleteOneCharacter(Button button) {
         button.setOnAction(e -> {
             deleteOneCharacter();
+            setTempResult();
         });
     }
 
     private void setEventOpeningBracket(Button button) {
         button.setOnAction(e -> {
             openingBracket();
+            setTempResult();
         });
     }
 
     private void setEventClosingBracket(Button button) {
         button.setOnAction(e -> {
             closingBracket();
+            setTempResult();
         });
     }
 
     private void setEventFraction(Button button) {
         button.setOnAction(e -> {
             fraction("1/");
+            setTempResult();
         });
     }
 
@@ -391,12 +405,14 @@ public class Controller {
     private void setEventTrigonometric(Button button) {
         button.setOnAction(e -> {
             trigonometric(button.getText());
+            setTempResult();
         });
     }
 
     private void setEventButtonKey(Button button) {
         view.getScene().setOnKeyPressed(e -> {
             setEventButton(button);
+            setTempResult();
         });
     }
 
