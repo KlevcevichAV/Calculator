@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+// added check trig function for temp result(remove all brackets and check the last symbol for trigonometric function)
+
 public class Controller {
     private View view;
     private Parser parser;
@@ -228,11 +230,13 @@ public class Controller {
 
     private void equal() {
         String expression = view.getDisplayExpression().getText();
+        StringBuffer strBuffer = new StringBuffer(expression);
         if (expression.length() == 0) return;
         int pointer = checkClosingBracket(expression);
         for (int i = 0; i < pointer; i++) {
-            expression = expression + ')';
+            strBuffer.append(')');
         }
+        expression = strBuffer.toString();
         view.getDisplayExpression().setText(expression);
         Double resultD = parser.start(expression);
         if (resultD == null) {
@@ -454,14 +458,15 @@ public class Controller {
         if(checkSign(expression.charAt(expression.length() - 1))){
             expression = copy(0, expression.length() - 1, expression);
         }
+        StringBuffer strBuffer = new StringBuffer(expression);
         int pointer = checkClosingBracket(expression);
         if(pointer == expression.length()){
             return "";
         }
         for (int i = 0; i < pointer; i++) {
-            expression = expression + ')';
+            strBuffer.append(')');
         }
-        return expression;
+        return strBuffer.toString();
     }
 
     private void setTempResult(){
@@ -513,7 +518,6 @@ public class Controller {
 
     public String createElementExpression(TreeItem<String> item, String prevOperation) {
         String result = "";
-        //?
         if (checkNumeric(item.getValue())) {
             result = item.getValue();
             if (result.charAt(result.length() - 1) == '0' && result.charAt(result.length() - 2) == '.') {
@@ -521,7 +525,6 @@ public class Controller {
             }
             return result;
         }
-        //
         if (checkOperationPM(item.getValue())) {
             String left = createElementExpression(item.getChildren().get(0), item.getValue());
             String right = createElementExpression(item.getChildren().get(1), item.getValue());
