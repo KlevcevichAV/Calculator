@@ -130,24 +130,21 @@ public class Controller {
         return result;
     }
 
-    private void deleteOneCharacter() {
-        String expression = view.getDisplayExpression().getText();
-        if (expression.length() == 0) return;
+    private String deleteOneCharacter(String expression) {
+        if (expression.length() == 0) return "";
         int check = checkTrigonometricFunction(expression);
         switch (check) {
             case -1: {
                 String newExpression = copy(0, expression.length() - 1, expression);
-                view.getDisplayExpression().setText(newExpression);
-                break;
+                return newExpression;
             }
             case 3: {
                 String newExpression = copy(0, expression.length() - 3, expression);
-                view.getDisplayExpression().setText(newExpression);
-                break;
+                return newExpression;
             }
             default: {
                 String newExpression = copy(0, expression.length() - 4, expression);
-                view.getDisplayExpression().setText(newExpression);
+                return newExpression;
             }
         }
     }
@@ -303,6 +300,7 @@ public class Controller {
     private void setEventButton(Button button) {
         button.setOnAction(e -> {
             eventDigitalKey(button.getText());
+
             setTempResult();
         });
     }
@@ -355,6 +353,7 @@ public class Controller {
         button.setOnAction(e -> {
             signMinus(button.getText());
             setTempResult();
+            view.createTree(null);
         });
     }
 
@@ -362,6 +361,7 @@ public class Controller {
         button.setOnAction(e -> {
             sign(button.getText());
             setTempResult();
+            view.createTree(null);
         });
     }
 
@@ -369,13 +369,15 @@ public class Controller {
         button.setOnAction(e -> {
             root();
             setTempResult();
+            view.createTree(null);
         });
     }
 
     private void setEventDeleteOneCharacter(Button button) {
         button.setOnAction(e -> {
-            deleteOneCharacter();
+            view.getDisplayExpression().setText(deleteOneCharacter(view.getDisplayExpression().getText()));;
             setTempResult();
+            view.createTree(null);
         });
     }
 
@@ -383,6 +385,7 @@ public class Controller {
         button.setOnAction(e -> {
             openingBracket();
             setTempResult();
+            view.createTree(null);
         });
     }
 
@@ -390,6 +393,7 @@ public class Controller {
         button.setOnAction(e -> {
             closingBracket();
             setTempResult();
+            view.createTree(null);
         });
     }
 
@@ -397,6 +401,7 @@ public class Controller {
         button.setOnAction(e -> {
             fraction("1/");
             setTempResult();
+            view.createTree(null);
         });
     }
 
@@ -410,6 +415,7 @@ public class Controller {
         button.setOnAction(e -> {
             trigonometric(button.getText());
             setTempResult();
+            view.createTree(null);
         });
     }
 
@@ -417,6 +423,7 @@ public class Controller {
         view.getScene().setOnKeyPressed(e -> {
             setEventButton(button);
             setTempResult();
+            view.createTree(null);
         });
     }
 
@@ -455,8 +462,9 @@ public class Controller {
     }
 
     private String endExpression(String expression){
-        if(checkSign(expression.charAt(expression.length() - 1))){
-            expression = copy(0, expression.length() - 1, expression);
+        while(checkTrigonometricFunction(expression) != -1 || expression.charAt(expression.length() - 1) == '(' || checkSign(expression.charAt(expression.length() - 1))){
+            expression = deleteOneCharacter(expression);
+            if(expression.length() == 0) break;
         }
         StringBuffer strBuffer = new StringBuffer(expression);
         int pointer = checkClosingBracket(expression);
@@ -623,7 +631,7 @@ public class Controller {
             setTempResult();
         }
         if (pressedKeys.contains(KeyCode.BACK_SPACE)) {
-            deleteOneCharacter();
+            view.getDisplayExpression().setText(deleteOneCharacter(view.getDisplayExpression().getText()));
             setTempResult();
         }
     }
